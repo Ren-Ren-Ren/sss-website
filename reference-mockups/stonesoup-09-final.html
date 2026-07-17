@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stone Soup</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,400;0,9..144,600&family=Inter:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0B0B0A;--text:#EDEAE4;--muted:#8A867D;--accent:#B08D57;--line:#242320;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  .label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 48px 0;mix-blend-mode:difference;}
+  .nav-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+  .nav-row{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;}
+  .nav-3col{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;}
+  .nav-3col .clock{justify-self:center;}
+  .nav-3col ul{justify-self:end;}
+  nav .mark{font-family:'Fraunces',serif;font-size:18px;letter-spacing:0.02em;}
+  nav ul{list-style:none;display:flex;gap:32px;align-items:center;}
+  nav a{color:var(--text);text-decoration:none;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;}
+  nav .clock{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:0.04em;}
+
+  .hero{height:100vh;position:relative;display:flex;align-items:flex-end;background:linear-gradient(180deg, rgba(11,11,10,0.1) 0%, rgba(11,11,10,0.85) 100%), url('https://picsum.photos/seed/tenniscourt/1800/1200') center/cover;filter:grayscale(0.15);}
+  .hero-inner{padding:0 48px 80px;max-width:1200px;}
+  .hero-eyebrow{margin-bottom:24px;}
+  .hero h1{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(48px,7vw,104px);line-height:0.98;letter-spacing:-0.01em;}
+  .hero h1 em{font-style:italic;font-weight:300;color:var(--accent);}
+  .hero-sub{margin-top:28px;max-width:460px;font-size:16px;line-height:1.6;color:var(--muted);font-weight:300;}
+  .scroll-cue{position:absolute;bottom:32px;right:48px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase;writing-mode:vertical-rl;}
+
+  section{padding:140px 48px;border-top:1px solid var(--line);}
+  .section-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:80px;flex-wrap:wrap;gap:16px;}
+  .section-head h2{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(28px,3.4vw,44px);}
+  .section-head p{max-width:320px;color:var(--muted);font-size:14px;line-height:1.6;}
+
+  .disciplines{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);}
+  .discipline{background:var(--bg);padding:44px 32px;transition:background .4s ease;}
+  .discipline:hover{background:#141311;}
+  .discipline .label{margin-bottom:28px;}
+  .discipline h3{font-family:'Fraunces',serif;font-weight:400;font-size:22px;margin-bottom:14px;}
+  .discipline p{color:var(--muted);font-size:13.5px;line-height:1.6;font-weight:300;}
+
+  /* Feed — bodeyco-style, media constrained to center 2/3 */
+  .feed-list{border-top:1px solid var(--line);}
+  .feed-block{border-bottom:1px solid var(--line);padding:56px 0;}
+  .feed-media{position:relative;width:66.666%;margin:0 auto;height:70vh;min-height:400px;overflow:hidden;}
+  .feed-media img{width:100%;height:100%;object-fit:cover;filter:grayscale(0.35) brightness(0.88);transition:filter .6s ease;}
+  .feed-block:hover .feed-media img{filter:grayscale(0) brightness(1);}
+  .feed-controls{position:absolute;top:24px;left:24px;display:flex;gap:14px;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:0.06em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:6px 12px;}
+  .feed-text{width:66.666%;margin:0 auto;display:flex;justify-content:space-between;align-items:baseline;padding:24px 0 0;flex-wrap:wrap;gap:10px;}
+  .feed-text .client{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:0.04em;}
+  .feed-text .title{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:24px;}
+  .feed-count{text-align:center;padding:60px 0;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:0.1em;}
+
+  /* Journal — bodeyco-style plain list, text over image */
+  .journal-list{border-top:1px solid var(--line);}
+  .journal-row{display:grid;grid-template-columns:140px 1fr;gap:32px;padding:36px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;}
+  .journal-row .jr-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:0.08em;text-transform:uppercase;padding-top:4px;}
+  .journal-row .jr-title{font-family:'Fraunces',serif;font-size:22px;font-weight:400;margin-bottom:8px;}
+  .journal-row .jr-desc{color:var(--muted);font-size:13.5px;line-height:1.6;max-width:640px;}
+  .journal-row:hover .jr-title{color:var(--accent);}
+
+  .manifesto{padding:160px 48px;text-align:center;border-top:1px solid var(--line);}
+  .manifesto p{font-family:'Fraunces',serif;font-weight:300;font-style:italic;font-size:clamp(24px,3.6vw,42px);line-height:1.4;max-width:900px;margin:0 auto;}
+  .manifesto .accent-word{color:var(--accent);font-style:normal;}
+
+  footer{padding:80px 48px 48px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:40px;border-top:1px solid var(--line);}
+  footer .cta h3{font-family:'Fraunces',serif;font-size:clamp(32px,4vw,56px);font-weight:400;margin-bottom:8px;}
+  footer a.email{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);}
+  footer .meta{text-align:right;color:var(--muted);font-size:12px;line-height:1.8;font-family:'IBM Plex Mono',monospace;}
+
+  @media (max-width:900px){
+    .disciplines{grid-template-columns:1fr 1fr;}
+    .feed-media, .feed-text{width:100%;}
+    nav{padding:16px 24px 0;}
+    .nav-3col{grid-template-columns:1fr;gap:10px;text-align:center;}
+    .nav-3col ul{justify-self:center;flex-wrap:wrap;justify-content:center;}
+    section{padding:80px 24px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-tag">A Creative House</div>
+  <div class="nav-row nav-3col">
+    <div class="mark">Studio Stone Soup</div>
+    <div class="clock" id="liveClock">New York —</div>
+    <ul>
+      <li><a href="#work">Work</a></li>
+      <li><a href="stonesoup-team.html">Team</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="https://www.instagram.com/studiostonesoup/" target="_blank">Instagram</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero" style="border:none;padding-top:96px;">
+  <div class="hero-inner">
+    <div class="hero-eyebrow label">Production — Creative Direction — Branding / Brooklyn</div>
+    <h1>We build the <em>world</em><br>around the image.</h1>
+    <p class="hero-sub">Stone Soup is a creative production house. We plan the shoot, direct the story, and shape the brand around it — one team, start to finish.</p>
+  </div>
+  <div class="scroll-cue">Scroll</div>
+</section>
+
+<section id="capabilities">
+  <div class="section-head">
+    <h2>What we do</h2>
+    <p>Four disciplines, one crew. Most studios hand you off between them — we don't.</p>
+  </div>
+  <div class="disciplines">
+    <div class="discipline">
+      <div class="label">01 — Production</div>
+      <h3>Full-service production</h3>
+      <p>Locations, permits, crew, insurance. The parts that make or break a shoot day, handled before you arrive.</p>
+    </div>
+    <div class="discipline">
+      <div class="label">02 — Creative Direction</div>
+      <h3>Creative direction</h3>
+      <p>Concept through final cut. We protect the idea at every stage of the process.</p>
+    </div>
+    <div class="discipline">
+      <div class="label">03 — Branding</div>
+      <h3>Brand & identity</h3>
+      <p>Visual systems built to outlast a single campaign.</p>
+    </div>
+    <div class="discipline">
+      <div class="label">04 — Space</div>
+      <h3>Public space</h3>
+      <p>A physical room, open to everyone — where the work lives outside a screen.</p>
+    </div>
+  </div>
+</section>
+
+<section id="work" style="padding-left:0;padding-right:0;">
+  <div class="section-head" style="padding:0 48px;">
+    <h2>Selected work</h2>
+    <p>Case studies, not just galleries.</p>
+  </div>
+  <div class="feed-list">
+
+    <div class="feed-block">
+      <a href="stonesoup-nette-case-study.html" style="text-decoration:none;color:inherit;">
+        <div class="feed-media">
+          <div class="feed-controls"><span>Play</span><span>Unmute</span><span>00:00 / 00:24</span></div>
+          <img src="https://picsum.photos/seed/nyc-street/1600/1000" alt="">
+        </div>
+        <div class="feed-text">
+          <div class="client">Nette / Sephora</div>
+          <div class="title">Empty Luxury</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="feed-block">
+      <div class="feed-media">
+        <div class="feed-controls"><span>Play</span><span>Unmute</span><span>00:00 / 00:18</span></div>
+        <img src="https://picsum.photos/seed/apartment-light/1600/1000" alt="">
+      </div>
+      <div class="feed-text">
+        <div class="client">Location</div>
+        <div class="title">Upper East Side Interior</div>
+      </div>
+    </div>
+
+    <div class="feed-block">
+      <div class="feed-media">
+        <div class="feed-controls"><span>Play</span><span>Unmute</span><span>00:00 / 00:31</span></div>
+        <img src="https://picsum.photos/seed/tennis-broadcast/1600/1000" alt="">
+      </div>
+      <div class="feed-text">
+        <div class="client">Location</div>
+        <div class="title">Cary Leeds — Broadcast Push</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="feed-count">003 / 001</div>
+</section>
+
+
+
+<section class="manifesto">
+  <p>We don't hand off between departments. Studio Stone Soup is <span class="accent-word">one table</span> — the photographer, the producer, the strategist, sitting in the same room.</p>
+</section>
+
+<footer id="contact">
+  <div class="cta">
+    <h3>Let's talk.</h3>
+    <a class="email" href="mailto:contact@stonesoup.info">contact@stonesoup.info</a>
+  </div>
+  <div class="meta">
+    Stone Soup LLC<br>
+    Brooklyn, NY<br>
+    © 2026
+  </div>
+</footer>
+
+<script>
+  function tick(){
+    const el = document.getElementById('liveClock');
+    const opts = { timeZone:'America/New_York', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false, weekday:'short', month:'short', day:'numeric' };
+    el.textContent = 'New York — ' + new Intl.DateTimeFormat('en-US', opts).format(new Date());
+  }
+  tick(); setInterval(tick, 1000);
+</script>
+</body>
+</html>

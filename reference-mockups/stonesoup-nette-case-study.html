@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nette — Empty Luxury — Stone Soup</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF6EE; --ink:#171410; --line:#DCD4C2; --stamp:#A3392C; --confirmed:#3E6B4F; --muted:#8B8474;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--paper);color:var(--ink);font-family:'IBM Plex Mono',monospace;-webkit-font-smoothing:antialiased;}
+  .serif{font-family:'Fraunces',serif;font-weight:400;}
+  img,video{filter:sepia(0.2) contrast(1.05) brightness(0.96);transition:filter .6s ease;}
+  .frame{border-left:1px solid var(--line);border-right:1px solid var(--line);max-width:1280px;margin:0 auto;}
+
+  header.slate{border-bottom:2px solid var(--ink);padding:20px 32px;display:flex;justify-content:space-between;align-items:center;}
+  header.slate .mark{font-size:15px;font-weight:600;letter-spacing:0.02em;text-decoration:none;color:var(--ink);}
+  header.slate a.back{color:var(--muted);text-decoration:none;font-size:12px;text-transform:uppercase;letter-spacing:0.06em;}
+
+  .cs-header{padding:64px 32px 40px;border-bottom:1px solid var(--line);}
+  .cs-tag{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;display:block;}
+  h1.cs-title{font-size:clamp(38px,6.5vw,88px);font-style:italic;font-weight:300;line-height:1.02;max-width:900px;}
+  .cs-meta{margin-top:44px;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);}
+  .meta-cell{padding:20px 24px 0 0;border-right:1px solid var(--line);}
+  .meta-cell:last-child{border-right:none;}
+  .meta-cell .k{font-size:10px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
+  .meta-cell .v{font-size:14px;}
+
+  .beat{border-bottom:1px solid var(--line);}
+  .beat-media{width:100%;height:78vh;min-height:420px;overflow:hidden;}
+  .beat-media img{width:100%;height:100%;object-fit:cover;}
+  .beat-media.split{display:grid;grid-template-columns:1fr 1fr;height:60vh;min-height:360px;gap:1px;background:var(--line);}
+  .beat-media.split img{height:100%;}
+  .beat-cap{padding:32px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap;}
+  .beat-cap .num{font-size:11px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;min-width:90px;}
+  .beat-cap p.serif{font-size:clamp(18px,2.2vw,26px);font-style:italic;max-width:640px;}
+
+  .description{padding:100px 32px;border-bottom:1px solid var(--line);max-width:880px;}
+  .description .cs-tag{margin-bottom:24px;}
+  .description p{font-family:'IBM Plex Mono',monospace;font-size:14px;line-height:1.85;color:#3a352c;margin-bottom:22px;}
+
+  .credits{padding:64px 32px;border-bottom:1px solid var(--line);}
+  .credits .cs-tag{margin-bottom:36px;}
+  .credit-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line);}
+  .credit{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:26px 24px;}
+  .credit .k{font-size:10px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;}
+  .credit .v{font-family:'Fraunces',serif;font-style:italic;font-size:17px;}
+
+  .prevnext{display:flex;justify-content:space-between;padding:40px 32px;}
+  .prevnext a{color:var(--ink);text-decoration:none;font-size:12px;text-transform:uppercase;letter-spacing:0.06em;}
+
+  footer{padding:40px 32px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:11px;color:var(--muted);flex-wrap:wrap;gap:12px;}
+
+  @media (max-width:900px){
+    .cs-meta{grid-template-columns:1fr 1fr;}
+    .beat-media{height:50vh;}
+    .beat-media.split{grid-template-columns:1fr;height:auto;}
+    .beat-media.split img{height:280px;}
+    .credit-grid{grid-template-columns:1fr;}
+    header.slate{padding:18px 20px;}
+    .cs-header{padding:40px 20px;}
+    .beat-cap, .description, .credits{padding:32px 20px;}
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <header class="slate">
+    <a class="mark" href="stonesoup-09-final.html">STUDIO STONE SOUP</a>
+    <a class="back" href="stonesoup-09-final.html">← Back to Production Log</a>
+  </header>
+
+  <div class="cs-header">
+    <span class="cs-tag">Case Study</span>
+    <h1 class="cs-title serif">Nette, Empty Luxury.</h1>
+    <div class="cs-meta">
+      <div class="meta-cell"><div class="k">Client</div><div class="v">Nette (Sephora)</div></div>
+      <div class="meta-cell"><div class="k">Year</div><div class="v">2026</div></div>
+      <div class="meta-cell"><div class="k">Scope</div><div class="v">30 stills · 3 social videos</div></div>
+      <div class="meta-cell"><div class="k">Locations</div><div class="v">Cary Leeds · UES · Interior</div></div>
+    </div>
+  </div>
+
+  <div class="beat">
+    <div class="beat-media"><img src="https://picsum.photos/seed/nette-concept/1600/1000" alt=""></div>
+    <div class="beat-cap">
+      <span class="num">01 — The Concept</span>
+      <p class="serif">A fragrance built for a quieter kind of luxury — the empty room, not the crowded one.</p>
+    </div>
+  </div>
+
+  <div class="beat">
+    <div class="beat-media split">
+      <img src="https://picsum.photos/seed/nette-craft-a/900/900" alt="">
+      <img src="https://picsum.photos/seed/nette-craft-b/900/900" alt="">
+    </div>
+    <div class="beat-cap">
+      <span class="num">02 — The Craft</span>
+      <p class="serif">A broadcast-lens push-out from the spectator stand — the one shot the location was chosen for.</p>
+    </div>
+  </div>
+
+  <div class="beat">
+    <div class="beat-media"><img src="https://picsum.photos/seed/nette-room/1600/1000" alt=""></div>
+    <div class="beat-cap">
+      <span class="num">03 — The Room</span>
+      <p class="serif">Minimal decor, strong window light — the apartment does the talking, not the props.</p>
+    </div>
+  </div>
+
+  <div class="beat">
+    <div class="beat-media split">
+      <img src="https://picsum.photos/seed/nette-crew-a/900/900" alt="">
+      <img src="https://picsum.photos/seed/nette-crew-b/900/900" alt="">
+    </div>
+    <div class="beat-cap">
+      <span class="num">04 — The Crew</span>
+      <p class="serif">Lean by design: one team covering production, direction, and styling across three locations in two days.</p>
+    </div>
+  </div>
+
+  <div class="description">
+    <span class="cs-tag">Project Description</span>
+    <p>Nette came to us with a fragrance and a feeling: luxury that doesn't announce itself. Our job was to build the world that scent lives in — three locations, thirty stills, three social videos, and an influencer layer, all shot across two days in New York.</p>
+    <p>Cary Leeds wasn't a backdrop, it was a requirement — the spectator stand made a specific broadcast-style shot possible, one no other court in the city could offer. The apartment interior leaned on window light and restraint instead of styling, closer to an Architectural Digest spread than a beauty campaign.</p>
+    <p>We ran it lean on purpose: hair, makeup, and styling folded into the creative fee, crew transport coordinated with the client, and a producer dedicated entirely to locations and permits. Lean doesn't mean loose — every risk on a multi-location, multi-day shoot gets named and planned for before call time, not during it.</p>
+  </div>
+
+  <div class="credits">
+    <span class="cs-tag">Credits</span>
+    <div class="credit-grid">
+      <div class="credit"><div class="k">Production & Creative Direction</div><div class="v">Stone Soup LLC</div></div>
+      <div class="credit"><div class="k">Producer</div><div class="v">Sissi</div></div>
+      <div class="credit"><div class="k">Client</div><div class="v">Nette</div></div>
+      <div class="credit"><div class="k">Locations</div><div class="v">Cary Leeds Center</div></div>
+      <div class="credit"><div class="k">Locations</div><div class="v">Upper East Side</div></div>
+      <div class="credit"><div class="k">Locations</div><div class="v">Private Residence, NYC</div></div>
+    </div>
+  </div>
+
+  <div class="prevnext">
+    <a href="stonesoup-09-final.html">← Production Log</a>
+    <a href="stonesoup-09-final.html">Next Project →</a>
+  </div>
+
+  <footer>
+    <span>Stone Soup LLC</span>
+    <span>Brooklyn, NY</span>
+    <span>© 2026</span>
+  </footer>
+
+</div>
+</body>
+</html>

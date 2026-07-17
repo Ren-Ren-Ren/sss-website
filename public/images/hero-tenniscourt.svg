@@ -1,0 +1,8 @@
+<svg width="1800" height="1200" viewBox="0 0 1800 1200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1800" height="1200" fill="#ececE4"/>
+  <rect x="0.5" y="0.5" width="1799" height="1199" fill="none" stroke="#d8d5cc" stroke-width="1"/>
+  <line x1="0" y1="0" x2="1800" y2="1200" stroke="#d8d5cc" stroke-width="1"/>
+  <line x1="1800" y1="0" x2="0" y2="1200" stroke="#d8d5cc" stroke-width="1"/>
+  <text x="50%" y="48%" text-anchor="middle" font-family="monospace" font-size="30" letter-spacing="2" fill="#8a867d">PLACEHOLDER</text>
+  <text x="50%" y="54%" text-anchor="middle" font-family="monospace" font-size="20" fill="#8a867d">Homepage Hero — hero-tenniscourt.svg — 1800×1200</text>
+</svg>
