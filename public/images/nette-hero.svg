@@ -1,8 +1,0 @@
-<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1920" height="1080" fill="#ececE4"/>
-  <rect x="0.5" y="0.5" width="1919" height="1079" fill="none" stroke="#d8d5cc" stroke-width="1"/>
-  <line x1="0" y1="0" x2="1920" y2="1080" stroke="#d8d5cc" stroke-width="1"/>
-  <line x1="1920" y1="0" x2="0" y2="1080" stroke="#d8d5cc" stroke-width="1"/>
-  <text x="50%" y="48%" text-anchor="middle" font-family="monospace" font-size="32" letter-spacing="2" fill="#8a867d">PLACEHOLDER</text>
-  <text x="50%" y="54%" text-anchor="middle" font-family="monospace" font-size="21.333333333333332" fill="#8a867d">Nette Case Study — Hero — nette-hero.svg — 1920×1080</text>
-</svg>

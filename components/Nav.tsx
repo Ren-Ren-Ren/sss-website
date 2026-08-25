@@ -1,13 +1,16 @@
 import Link from "next/link";
 import Clock from "./Clock";
+import LogoMark from "./LogoMark";
+import { getNavContent } from "@/content/pages";
 
 export default function Nav() {
+  const nav = getNavContent();
   return (
     <nav>
-      <div className="nav-tag">A Creative House</div>
-      <div className="nav-row nav-3col">
+      <div className="nav-row nav-top">
         <Link className="mark" href="/">
-          Studio Stone Soup
+          <LogoMark />
+          <span>Studio Stone Soup</span>
         </Link>
         <Clock />
         <ul>
@@ -18,7 +21,7 @@ export default function Nav() {
             <Link href="/team">Team</Link>
           </li>
           <li>
-            <Link href="/#contact">Contact</Link>
+            <a href="mailto:contact@stonesoup.info">Email</a>
           </li>
           <li>
             <a href="https://www.instagram.com/studiostonesoup/" target="_blank" rel="noopener noreferrer">
@@ -27,6 +30,7 @@ export default function Nav() {
           </li>
         </ul>
       </div>
+      <div className="nav-tag">{nav.tagline}</div>
     </nav>
   );
 }

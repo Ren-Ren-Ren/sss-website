@@ -1,8 +1,0 @@
-<svg width="900" height="900" viewBox="0 0 900 900" xmlns="http://www.w3.org/2000/svg">
-  <rect width="900" height="900" fill="#ececE4"/>
-  <rect x="0.5" y="0.5" width="899" height="899" fill="none" stroke="#d8d5cc" stroke-width="1"/>
-  <line x1="0" y1="0" x2="900" y2="900" stroke="#d8d5cc" stroke-width="1"/>
-  <line x1="900" y1="0" x2="0" y2="900" stroke="#d8d5cc" stroke-width="1"/>
-  <text x="50%" y="48%" text-anchor="middle" font-family="monospace" font-size="15" letter-spacing="2" fill="#8a867d">PLACEHOLDER</text>
-  <text x="50%" y="54%" text-anchor="middle" font-family="monospace" font-size="11" fill="#8a867d">Nette Grid — 06 — nette-grid-06.svg — 900×900</text>
-</svg>

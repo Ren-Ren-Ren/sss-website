@@ -5,10 +5,6 @@
   --accent: #b08d57;
   --line: #e3e0d9;
   --on-dark: #f5f2ea;
-
-  --font-serif: var(--font-fraunces), serif;
-  --font-sans: var(--font-inter), sans-serif;
-  --font-mono: var(--font-plex-mono), monospace;
 }
 
 * {
@@ -21,11 +17,33 @@ html {
   scroll-behavior: smooth;
 }
 
+/* The --font-* base variables (--font-bodoni, --font-switzer) are injected
+   by next/font via a class on <body> — so these aliases have to live on
+   body too, not :root. A var() reference inside a custom property
+   resolves using the value in scope at the element the property is
+   declared on, not wherever it's later used; declaring these on :root
+   (an ancestor of body) would resolve against an environment where the
+   next/font variables don't exist yet, making the alias permanently
+   invalid for every descendant.
+
+   --font-sans and --font-mono both point at the same Switzer family as
+   --font-grotesk now — one grotesk doing every job (body copy, nav,
+   utility/meta labels, display headline) is the whole point of the
+   "well-crafted, one visual language" pass, matching how mouthwash.studio
+   runs a single Suisse BP Intl at every size instead of splitting roles
+   across separate typefaces. The names stay as-is (--font-sans/--font-mono)
+   since call sites are keyed to the ROLE a font is playing, not literally
+   "a sans-serif" or "a monospace" family. */
 body {
+  --font-serif: var(--font-bodoni), serif;
+  --font-sans: var(--font-switzer), sans-serif;
+  --font-mono: var(--font-switzer), sans-serif;
+  --font-grotesk: var(--font-switzer), sans-serif;
+
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
-  font-weight: 300;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -49,43 +67,40 @@ nav {
   left: 0;
   right: 0;
   z-index: 100;
-  padding: 20px 48px 0;
+  padding: 12px 20px 0;
   mix-blend-mode: difference;
 }
 
 .nav-tag {
+  position: fixed;
+  left: 48px;
+  bottom: 24px;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 14px;
 }
 
 .nav-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding-bottom: 16px;
 }
 
-.nav-3col {
+.nav-top {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
 }
 
-.nav-3col .clock {
-  justify-self: center;
-}
-
-.nav-3col ul {
-  justify-self: end;
-}
-
 nav .mark {
-  font-family: var(--font-serif);
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-grotesk);
+  font-weight: 700;
+  font-size: 13.5px;
   letter-spacing: 0.02em;
   text-decoration: none;
   color: var(--on-dark);
@@ -96,68 +111,43 @@ nav ul {
   display: flex;
   gap: 32px;
   align-items: center;
+  justify-self: end;
 }
 
 nav a {
   color: var(--on-dark);
   text-decoration: none;
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-family: var(--font-mono);
 }
 
 nav .clock {
+  justify-self: center;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   color: var(--on-dark);
   letter-spacing: 0.04em;
 }
 
 @media (max-width: 900px) {
   nav {
-    padding: 16px 24px 0;
+    padding: 12px 16px 0;
   }
-  .nav-3col {
-    grid-template-columns: 1fr;
+  .nav-top {
+    display: flex;
+    flex-direction: column;
     gap: 10px;
-    text-align: center;
   }
-  .nav-3col ul {
-    justify-self: center;
+  nav ul {
     flex-wrap: wrap;
     justify-content: center;
+    gap: 18px;
+  }
+  .nav-tag {
+    left: 24px;
+    bottom: 16px;
   }
 }
 
-/* Footer — shared across every page */
-footer {
-  padding: 80px 48px 48px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  gap: 40px;
-  border-top: 1px solid var(--line);
-}
-
-footer .cta h3 {
-  font-family: var(--font-serif);
-  font-size: clamp(32px, 4vw, 56px);
-  font-weight: 400;
-  margin-bottom: 8px;
-}
-
-footer a.email {
-  color: var(--accent);
-  text-decoration: none;
-  border-bottom: 1px solid var(--accent);
-}
-
-footer .meta {
-  text-align: right;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.8;
-  font-family: var(--font-mono);
-}

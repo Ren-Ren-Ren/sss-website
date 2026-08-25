@@ -1,26 +1,36 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
+import localFont from "next/font/local";
+import { Bodoni_Moda } from "next/font/google";
 import "./globals.css";
 
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  weight: ["300", "400", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-fraunces",
+// Switzer (Fontshare) — a free, open substitute for Suisse Int'l (the
+// commercial Swiss Typefaces face Suisse BP Intl), self-hosted here rather
+// than pulled from Fontshare's CDN at runtime. This is now the site's one
+// grotesk, doing every job — headline, body copy, nav, utility/meta
+// labels — the same one-typeface-at-every-size discipline mouthwash.studio
+// runs with Suisse BP Intl, instead of splitting those roles across
+// separate sans/mono families.
+const switzer = localFont({
+  src: [
+    { path: "../fonts/Switzer-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Switzer-Semibold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/Switzer-Bold.woff2", weight: "700", style: "normal" },
+    { path: "../fonts/Switzer-Black.woff2", weight: "900", style: "normal" },
+  ],
+  variable: "--font-switzer",
   display: "swap",
 });
 
-const inter = Inter({
+// A free, open substitute for Suisse Works (the commercial Swiss Typefaces
+// serif) — reserved purely for the one italic accent moment (homepage
+// flourish word, grid/feed subtitles, team manifesto line), mirroring how
+// rarely mouthwash's own Suisse Works actually shows up. Italic-only —
+// nothing on the site uses it upright anymore.
+const bodoniModa = Bodoni_Moda({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-plex-mono",
+  weight: ["400", "600"],
+  style: ["italic"],
+  variable: "--font-bodoni",
   display: "swap",
 });
 
@@ -37,11 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${fraunces.variable} ${inter.variable} ${ibmPlexMono.variable}`}
-      >
-        {children}
-      </body>
+      <body className={`${switzer.variable} ${bodoniModa.variable}`}>{children}</body>
     </html>
   );
 }

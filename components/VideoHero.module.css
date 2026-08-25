@@ -1,0 +1,64 @@
+/* Fills whatever space the .hero flex column in app/page.module.css gives
+   it. transform (set imperatively by the intro animation) creates its own
+   stacking context, so z-index below only matters/applies while that's
+   active. */
+.box {
+  flex: 1;
+  min-height: 260px;
+  margin: 118px 48px 0;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--line);
+}
+
+.box video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .box {
+    margin: 96px 20px 0;
+    min-height: 200px;
+    border-radius: 4px;
+  }
+}
+
+/* Applied to <body> for the ~1.4s the intro runs, so the box's transform
+   (briefly far larger than its resting box) can't create a scrollbar. */
+.introLock {
+  overflow: hidden;
+}
+
+/* The "SSS" mark — independent of the video box's own transform so it
+   stays undistorted; grows past the viewport and fades while the box
+   itself shrinks into place underneath it. */
+.introMark {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.introMark span {
+  font-family: var(--font-grotesk);
+  font-weight: 900;
+  font-size: 32px;
+  letter-spacing: 0.06em;
+  color: #fff;
+  opacity: 1;
+  transform: scale(1);
+  transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1), opacity 700ms ease;
+}
+
+/* Scaled well past any real viewport width so it visibly blows past the
+   screen edges as it fades, rather than just reading as "a bit bigger". */
+.introMark.growing span {
+  transform: scale(16);
+  opacity: 0;
+}

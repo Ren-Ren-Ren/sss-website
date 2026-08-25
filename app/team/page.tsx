@@ -1,32 +1,16 @@
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { getTeamContent } from "@/content/pages";
 import styles from "./team.module.css";
 
 export const metadata: Metadata = {
   title: "Team — Studio Stone Soup",
 };
 
-const services = [
-  "Creative Strategy",
-  "Creative Direction",
-  "Art Direction",
-  "Photography",
-  "Motion",
-  "Production",
-  "Post-Production",
-];
-
-const clients = [
-  "Nette",
-  "Aventine Skin",
-  "Faro Studio",
-  "Marlow & Co.",
-  "Hearth Supply",
-  "North & Fable",
-];
-
 export default function TeamPage() {
+  const team = getTeamContent();
+
   return (
     <>
       <Nav />
@@ -34,46 +18,46 @@ export default function TeamPage() {
       <div className={styles.page}>
         <div className={styles.columns}>
           <div className={styles.intro}>
-            <p>
-              Studio Stone Soup began in a rented room in Bushwick — four
-              walls and good light, open to whoever asked.
-            </p>
-            <p>
-              What we learned running that space is that production,
-              direction, and branding hold up better at the same table than
-              handed between vendors. That&apos;s still how we work now,
-              whether the job is a single campaign or a system built to
-              outlast it.
-            </p>
-            <p>We&apos;re based in Brooklyn, working across New York and beyond.</p>
+            {team.intro.map((paragraph, i) => {
+              const isLead = i === 0;
+              const isManifesto = i === team.intro.length - 1;
+              return (
+                <p
+                  key={paragraph}
+                  className={isLead ? styles.introLead : isManifesto ? styles.introManifesto : undefined}
+                >
+                  {paragraph}
+                </p>
+              );
+            })}
+
+            <div className={styles.block}>
+              <div className={styles.heading}>Inquiries</div>
+              <a className={styles.emailLink} href={`mailto:${team.email}`}>
+                {team.email}
+              </a>
+            </div>
           </div>
 
-          <div>
+          <div className={styles.servicesColumn}>
             <div className={styles.block}>
               <div className={styles.heading}>Services</div>
               <ul className={styles.list}>
-                {services.map((service) => (
+                {team.services.map((service) => (
                   <li key={service}>{service}</li>
                 ))}
               </ul>
             </div>
           </div>
 
-          <div>
+          <div className={styles.clientsColumn}>
             <div className={styles.block}>
               <div className={styles.heading}>Clients</div>
-              <ul className={styles.list}>
-                {clients.map((client) => (
+              <ul className={`${styles.list} ${styles.clientsList}`}>
+                {team.clients.map((client) => (
                   <li key={client}>{client}</li>
                 ))}
               </ul>
-            </div>
-
-            <div className={styles.block}>
-              <div className={styles.heading}>Inquiries</div>
-              <a className={styles.emailLink} href="mailto:contact@stonesoup.info">
-                contact@stonesoup.info
-              </a>
             </div>
           </div>
         </div>

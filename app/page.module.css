@@ -1,84 +1,71 @@
+/* Hero video + statement together fill exactly one viewport on load — the
+   video takes whatever space is left after the statement's own (variable)
+   height, instead of a fixed aspect-ratio that could push the statement
+   below the fold. min-height keeps the video from collapsing to nothing
+   if the statement ever wraps to several lines. */
 .hero {
-  height: 100vh;
-  position: relative;
   display: flex;
-  align-items: flex-end;
-  background:
-    linear-gradient(180deg, rgba(11, 11, 10, 0.1) 0%, rgba(11, 11, 10, 0.85) 100%),
-    url("/images/hero-tenniscourt.svg") center/cover;
-  filter: grayscale(0.15);
-  border: none;
-  padding-top: 96px;
+  flex-direction: column;
+  height: 100vh;
 }
 
-.heroInner {
-  padding: 0 48px 80px;
-  max-width: 1200px;
-}
-
-.heroEyebrow {
-  margin-bottom: 24px;
-}
-
-.heroTitle {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  font-size: clamp(48px, 7vw, 104px);
-  line-height: 0.98;
-  letter-spacing: -0.01em;
-  color: var(--on-dark);
-}
-
-.heroTitle em {
-  font-style: italic;
-  font-weight: 300;
-  color: var(--accent);
-}
-
-.heroSub {
-  margin-top: 28px;
-  max-width: 460px;
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--muted);
-  font-weight: 300;
-}
-
-.scrollCue {
-  position: absolute;
-  bottom: 32px;
-  right: 48px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  color: var(--muted);
-  text-transform: uppercase;
-  writing-mode: vertical-rl;
-}
-
-.manifesto {
-  padding: 160px 48px;
+.statement {
+  flex-shrink: 0;
+  padding: 40px 48px 56px;
   text-align: center;
-  border-top: 1px solid var(--line);
 }
 
-.manifesto p {
-  font-family: var(--font-serif);
-  font-weight: 300;
-  font-style: italic;
-  font-size: clamp(24px, 3.6vw, 42px);
-  line-height: 1.4;
-  max-width: 900px;
-  margin: 0 auto;
+.eyebrow {
+  margin-bottom: 24px;
+  display: block;
 }
 
+.statement p {
+  font-family: var(--font-grotesk);
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+/* Each line is forced onto one line at every viewport width — font-size is
+   solved per line from its own character count (--chars, set inline in
+   page.tsx) so a long sentence and a short one both fill roughly the same
+   share of the line box instead of one wrapping or overflowing. Caps out
+   at 42px, matching the original fixed desktop size. The floor is
+   deliberately tiny (not a "readable minimum") — the one-line guarantee
+   has to hold for copy of any length, so it's the thing that must never
+   lose to a readability floor; a long line on a narrow phone should get
+   small, not wrap or spill off-screen. */
+.statementLine {
+  display: block;
+  white-space: nowrap;
+  font-size: clamp(6px, calc(157vw / var(--chars)), 42px);
+  letter-spacing: -0.01em;
+}
+
+/* The one script/italic flourish — a single phrase breaking from the
+   grotesk headline, not the whole statement. */
 .accentWord {
-  color: var(--accent);
-  font-style: normal;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--text);
 }
 
 @media (max-width: 900px) {
-  .manifesto {
-    padding: 80px 24px;
+  .statement {
+    padding: 32px 24px 40px;
+  }
+}
+
+/* Below this width there isn't room for a long sentence to stay a single
+   oversized line without shrinking past legibility — so it wraps normally
+   at a comfortable fixed size instead of chasing the one-line rule down
+   to unreadable text. The no-wrap/shrink-to-fit treatment above still
+   holds everywhere there's room for it to look confident, not just tiny. */
+@media (max-width: 560px) {
+  .statementLine {
+    white-space: normal;
+    font-size: 22px;
+    line-height: 1.35;
   }
 }
