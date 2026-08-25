@@ -10,12 +10,13 @@ export type Project = {
   // Stable URL/route identifier — matches the app/projects/<slug>/ folder
   // and is what links, prev/next, and page params use. Never changes.
   slug: string;
-  // The actual content/case-studies/<dir>/ folder name on disk, where this
-  // project's content.txt and media files live. Kept separate from `slug`
-  // on purpose: media is organized/renamed by hand from time to time (e.g.
-  // to something more descriptive), and doing that shouldn't silently
-  // break every URL, prev/next link, and route on the site. If a folder
-  // gets renamed, update `dir` here — `slug` doesn't need to move.
+  // The project's folder name on disk — content/case-studies/<dir>/ for
+  // content.txt, public/case-studies/<dir>/ for the media itself. Kept
+  // separate from `slug` on purpose: media is organized/renamed by hand
+  // from time to time (e.g. to something more descriptive), and doing
+  // that shouldn't silently break every URL, prev/next link, and route
+  // on the site. If a folder gets renamed, update `dir` here — `slug`
+  // doesn't need to move.
   dir: string;
   year: string;
   slides: Slide[];
@@ -33,8 +34,8 @@ function isVideo(src: string) {
   return /\.(mp4|mov)$/i.test(src);
 }
 
-// Every project's media lives in content/case-studies/<dir>/ and is served
-// from /case-studies/<dir>/... via the public/case-studies symlink.
+// Every project's media lives in public/case-studies/<dir>/ and is served
+// from /case-studies/<dir>/... directly as a static file.
 function media(dir: string, filename: string): Slide {
   const src = `/case-studies/${encodeURIComponent(dir)}/${filename}`;
   return { src, type: isVideo(src) ? "video" : "image" };
