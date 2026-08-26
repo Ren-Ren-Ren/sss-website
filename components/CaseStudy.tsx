@@ -101,7 +101,14 @@ export default function CaseStudy({
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+    // goPrev/goNext close over isFirstSlide/isLastSlide, which are derived
+    // from `index` — re-subscribing on `index` change keeps those bounds
+    // checks current. With `[]` this ran once with index frozen at 0, so
+    // ArrowLeft could never fire (isFirstSlide stuck true) and ArrowRight
+    // never stopped at the last slide (isLastSlide stuck false), eventually
+    // pushing `index` past `project.slides.length - 1` and crashing the
+    // render (`project.slides[index]` → undefined).
+  }, [index, project.slides.length]);
 
   useLayoutEffect(() => {
     const box = mediaBoxRef.current;

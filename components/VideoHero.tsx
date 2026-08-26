@@ -72,6 +72,9 @@ export default function VideoHero({ videos }: { videos: string[] }) {
   return (
     <>
       <div ref={boxRef} className={styles.box}>
+        {/* No preload hint here — autoPlay already forces the browser to
+            buffer eagerly regardless of what preload says, so a hint would
+            be a no-op. */}
         <video key={src} src={src} autoPlay muted loop playsInline />
       </div>
 

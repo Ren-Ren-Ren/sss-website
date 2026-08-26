@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import ThumbnailMedia from "@/components/ThumbnailMedia";
 import {
   projects as defaultOrder,
   rawProjects,
   seededShuffle,
   DEFAULT_SHUFFLE_SEED,
-  type Focal,
   type Project,
 } from "@/lib/projects";
 import type { CaseStudyContent } from "@/content/case-studies/types";
@@ -17,23 +17,6 @@ import styles from "@/app/projects/projects.module.css";
 const STORAGE_SEED = "ss-projects-seed";
 const STORAGE_VISITS = "ss-projects-visits";
 const RESHUFFLE_EVERY = 5;
-
-function Media({
-  src,
-  type,
-  focal,
-}: {
-  src: string;
-  type: "video" | "image";
-  focal?: Focal;
-}) {
-  const style = focal ? { objectPosition: `${focal.x}% ${focal.y}%` } : undefined;
-  return type === "video" ? (
-    <video src={src} autoPlay muted loop playsInline style={style} />
-  ) : (
-    <img src={src} alt="" style={style} />
-  );
-}
 
 export default function ProjectsGrid({
   titles,
@@ -76,7 +59,7 @@ export default function ProjectsGrid({
           <Reveal as="div" key={project.slug}>
             <Link href={`/projects/${project.slug}`} className={styles.item}>
               <div className={styles.media}>
-                <Media src={hero.src} type={hero.type} focal={project.focal} />
+                <ThumbnailMedia src={hero.src} type={hero.type} focal={project.focal} />
               </div>
               <div className={styles.caption}>
                 <span className={styles.title}>{title}</span>

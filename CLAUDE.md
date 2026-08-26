@@ -101,13 +101,70 @@ solve different problems.
   organization without breaking routes, **as long as `dir` gets updated to
   match**. After any folder rename, verify `dir` values against what's
   actually on disk.
-- Homepage hero video(s) live in `content/homepage/` — any `.mp4`/`.mov`
+- Homepage hero video(s) live in `public/homepage/` — any `.mp4`/`.mov`
   dropped in there becomes a candidate automatically, picked at random per
-  visit (`lib/homepage.ts` just scans the directory). No filename
+  visit (`lib/homepage.ts` just scans that directory). No filename
   convention required, no code change needed to add/remove one.
+  (`content/homepage/` is a different folder — it only holds a non-served
+  README, not video candidates. Easy to mix up; the actual `DIR` constant
+  in `lib/homepage.ts` is the source of truth if this ever drifts again.)
 - `/projects` grid order is a *seeded* shuffle (`lib/projects.ts`,
   `seededShuffle`), reshuffling every 5 visits via `localStorage` — not
   genuinely random on every load, by design.
+- Case-study routes are one dynamic file, `app/projects/[slug]/page.tsx`,
+  not 25 individual folders — `generateStaticParams()` still prerenders all
+  25 at build time, so this is a maintenance simplification, not a behavior
+  change. If you ever need per-project overrides beyond what `lib/projects.ts`
+  already models (`overlayTheme`, `focal`), they belong as data on `Project`,
+  not as a reason to split a project back out into its own route file.
+- **Case-study/homepage media files in `public/` are never overwritten in
+  place — a re-export or fix always gets a new filename.** This isn't
+  optional: `next.config.mjs` sets `Cache-Control: immutable, max-age=1yr`
+  on everything under `/case-studies/` and `/homepage/`, so a file replaced
+  under its old name will keep serving the stale cached version to any
+  visitor (or CDN edge) that already fetched it, for up to a year. Renaming
+  the file (and updating the matching `media(...)` call in `lib/projects.ts`,
+  or just dropping a new `.mp4` in `public/homepage/`) is the only safe way
+  to update hero footage after this cache header was added.
+
+## Performance conventions
+
+- **Grid/feed thumbnails go through `components/ThumbnailMedia.tsx`**, not
+  a hand-rolled `<video>`/`<img>` switch — `WorkFeed.tsx` and
+  `ProjectsGrid.tsx` both use it. It exists specifically so the ~25 hero
+  videos/images on the homepage feed and `/projects` grid aren't all
+  fetched/autoplaying on first load: images get native `loading="lazy"`;
+  video keeps its real `<video src>` tag in the server-rendered HTML (so a
+  crawler or view-source still sees the actual media URL, and there's no
+  window where the element doesn't exist in the DOM) but skips `autoPlay`
+  and uses `preload="none"` — a shared `useInView` hook
+  (`components/useInView.ts`) calls `.play()` once the thumbnail is within
+  `rootMargin` of the viewport, which is what actually triggers the fetch.
+  Without JS (or before hydration/the observer fires), the video never
+  plays, so what's visible is the `.media` container's background color
+  (`WorkFeed.module.css`/`projects.module.css`) — not a video frame; that
+  background color is load-bearing for this, don't remove it without
+  reconsidering this tradeoff. If a future grid/feed needs the same "many
+  thumbnails, don't all autoplay at once" behavior, reuse
+  `ThumbnailMedia`/`useInView` rather than re-inventing this — an earlier
+  version gated the whole
+  element behind client-only state instead of just deferring playback, and
+  that erased every thumbnail from SSR/SSG output entirely (confirmed via a
+  production build: 0 `<img>`/`<video>` tags for both grids). Don't
+  reintroduce that shape.
+- `components/Reveal.tsx` has its own, separate `IntersectionObserver` for
+  its fade-in animation — it does not use `useInView`. That's intentional
+  (documented in the hook's own comment): `Reveal`'s observer is tuned,
+  working code with a reduced-motion short-circuit `useInView` doesn't
+  need, and merging them wasn't worth the regression risk. Don't be
+  surprised to find two IntersectionObserver call sites doing conceptually
+  similar things — they solve different problems (visibility-gated fade vs.
+  visibility-gated media fetch).
+- `preload` hints on `<video>` only matter when `autoPlay` is absent —
+  browsers override `preload` and buffer eagerly once `autoPlay` is set, so
+  don't add a `preload` attribute next to `autoPlay` expecting it to change
+  buffering behavior (it won't). `VideoHero.tsx`'s and `CaseStudy.tsx`'s
+  hero videos are both `autoPlay`, so neither sets `preload`.
 
 ## Known recurring gotchas
 
