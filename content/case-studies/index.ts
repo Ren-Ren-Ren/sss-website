@@ -67,6 +67,13 @@ function parse(raw: string, fallbackYear: string, fallbackTitle: string): CaseSt
 // project is titled; `fallbackYear` only covers files written before the
 // YEAR section existed, and the title fallback is just the folder name
 // itself, so a project is never rendered completely nameless.
+//
+// Not wrapped in cache() here: every call site (WorkFeed's feed loop, the
+// /projects grid loop) passes a different `dir` per call, so there's
+// nothing to dedupe at this level. The one place two calls *do* share the
+// same `dir` within one render — generateMetadata + Page for the same
+// case-study route — is deduped one layer up, in
+// app/projects/[slug]/page.tsx's own cache()-wrapped resolver.
 export function getCaseStudyContent(dir: string, fallbackYear = ""): CaseStudyContent {
   const raw = fs.readFileSync(path.join(DIR, dir, "content.txt"), "utf-8");
   return parse(raw, fallbackYear, dir);

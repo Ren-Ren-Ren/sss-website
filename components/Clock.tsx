@@ -13,12 +13,17 @@ const CLOCK_OPTIONS: Intl.DateTimeFormatOptions = {
   day: "numeric",
 };
 
+// Built once, not once a second — the tick interval below fires for as long
+// as Nav is on screen (i.e. every page), so a fresh formatter per tick was a
+// permanent-lifetime allocation every second.
+const formatter = new Intl.DateTimeFormat("en-US", CLOCK_OPTIONS);
+
 export default function Clock() {
   const [time, setTime] = useState<string | null>(null);
 
   useEffect(() => {
     const tick = () => {
-      setTime(new Intl.DateTimeFormat("en-US", CLOCK_OPTIONS).format(new Date()));
+      setTime(formatter.format(new Date()));
     };
     tick();
     const id = setInterval(tick, 1000);
