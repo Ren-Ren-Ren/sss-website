@@ -110,7 +110,28 @@ solve different problems.
   in `lib/homepage.ts` is the source of truth if this ever drifts again.)
 - `/projects` grid order is a *seeded* shuffle (`lib/projects.ts`,
   `seededShuffle`), reshuffling every 5 visits via `localStorage` — not
-  genuinely random on every load, by design.
+  genuinely random on every load, by design. **This is unrelated to
+  recency** — it exists purely so different visitors see a different
+  order (freshness), not to surface newest work first. Don't conflate the
+  two, and don't "fix" the shuffle in the name of showing new work more.
+- **New projects go at the front of the `rawProjects` array** in
+  `lib/projects.ts` (not appended at the end) — keeps the underlying list
+  itself newest-first/current, for anyone reading the source file, even
+  though what visitors see is shuffled per the point above. Slug number
+  prefixes (`26-`, `27-`, …) don't need to be renumbered to match array
+  position — they're just stable, unique identifiers already baked into
+  live URLs; only reorder the array, don't renumber existing slugs to
+  "fix" their prefix vs. position.
+- Adding a project with its own hero video: **ask each time** whether it
+  should also join `public/homepage/`'s hero rotation — don't auto-add it
+  and don't decide unasked. That folder is a **separate**, hand-curated
+  pool of files from `public/case-studies/<dir>/`, not auto-derived from
+  it or "every video project" by default — the original 3 reels were a
+  deliberate pick out of many more video projects that exist in
+  `public/case-studies/`, not an exhaustive list, so there's no rule to
+  infer from precedent. (Confirmed with Ren 2026-08-29: ask per-project,
+  every time — this was a deliberate choice, not a default worth
+  assuming.)
 - Case-study routes are one dynamic file, `app/projects/[slug]/page.tsx`,
   not 25 individual folders — `generateStaticParams()` still prerenders all
   25 at build time, so this is a maintenance simplification, not a behavior
@@ -126,6 +147,57 @@ solve different problems.
   the file (and updating the matching `media(...)` call in `lib/projects.ts`,
   or just dropping a new `.mp4` in `public/homepage/`) is the only safe way
   to update hero footage after this cache header was added.
+
+## SEO & discoverability conventions
+
+- **`lib/site.ts` is the one place the production domain
+  (`https://studiostonesoup.com`), site name, and default description live**
+  — `app/sitemap.ts`, `app/robots.ts`, `app/layout.tsx`'s `metadataBase`,
+  and `app/projects/[slug]/page.tsx`'s `generateMetadata` all import from
+  it instead of hardcoding the domain. If the domain ever changes, this is
+  the only file to edit.
+- **Title template**: `app/layout.tsx`'s `metadata.title.template` is
+  `"%s — Studio Stone Soup"`. Every inner page (`app/team/page.tsx`,
+  `app/projects/page.tsx`, `app/projects/[slug]/page.tsx`) sets only its
+  own short `title` string (e.g. `"Team"`, or a case study's
+  `[title, subtitle].join(" — ")`) and lets the layout append the brand
+  suffix — don't hand-concatenate `"— Studio Stone Soup"` or `"— Stone
+  Soup"` in a page's own `title` again; that's what drifted into
+  inconsistent brand strings before this was centralized. The homepage
+  itself sets no `title`, so it gets `metadata.title.default` verbatim
+  (the one full, keyword-rich string, not run through the template).
+- **Founder / personal-name SEO**: `content/pages/team/content.txt`'s
+  `FOUNDER` section (parsed by `getTeamContent()` in
+  `content/pages/index.ts`) is the one place that names Studio Stone
+  Soup's founder — currently `Weiren Jheng — Founder & Creative Director`.
+  It drives three things at once: the visible "Founder" block on `/team`
+  (`app/team/page.tsx`, styled via `.founderName` in `team.module.css` to
+  match the `.emailLink`/Inquiries block next to it), the `Person`
+  JSON-LD on that same page, and (by name only) the `founder` field on the
+  sitewide `Organization` JSON-LD in `app/layout.tsx`. If the founder's
+  name, title, or personal social profiles (`sameAs`) need adding, this is
+  the one line to edit — don't duplicate the name as a separate literal
+  elsewhere.
+- **Structured data (JSON-LD)**: `Organization` schema lives in
+  `app/layout.tsx` (site-wide, one entity referenced by every page) is not
+  duplicated per-page. `Person` schema for the founder lives only on
+  `/team`, next to the actual bio copy, rather than repeated on every
+  page — don't add a second `Organization` or `Person` block elsewhere
+  without a reason.
+- **Alt text**: `components/ThumbnailMedia.tsx` takes an `alt` prop (default
+  `""`) — `WorkFeed.tsx` and `ProjectsGrid.tsx` both pass
+  `[title, subtitle].filter(Boolean).join(" — ")` from the project's
+  content.txt. `CaseStudy.tsx`'s full-bleed slide `<img>` does the same
+  with `content.title`/`content.subtitle`. Video elements have no native
+  `alt` equivalent, so this only affects image slides/thumbnails — don't
+  revert these back to `alt=""`.
+- Favicon/app icon: `app/icon.png` and `app/apple-icon.png` are the
+  Next.js App Router convention (auto-linked in `<head>`, no manual `<link
+  rel="icon">` needed) — currently both are the same file as
+  `public/images/logo.png`. If the logo changes, update all three in the
+  same change (or drop the two `app/` copies and reintroduce them from the
+  new file) — they're intentionally duplicated, not symlinked, so a stale
+  favicon after a logo swap is a sign one of the three was missed.
 
 ## Performance conventions
 
@@ -209,17 +281,31 @@ solve different problems.
 
 This site studies mouthwash.studio as a reference, not a template:
 
-- We keep an **icon + wordmark lockup** (pinwheel + "Studio Stone Soup");
-  mouthwash's logo is text-only ("MW.S"). Because of this, our wordmark
-  needs *more* visual weight (Bold/700) than mouthwash's own logo text
-  (which is only weight 400) to balance against the icon's inherent solid
-  shape.
-- mouthwash's intro loader is a genuine shared-element animation — their
-  hero video visually shrinks from fullscreen into its resting position.
-  `components/VideoHero.tsx` replicates this for real via a FLIP-style
-  transform (measure resting rect, fake it as fullscreen, animate the
-  transform away) — this was built to match the literal mechanic, not a
-  simplified fade.
+- We keep an **icon + wordmark lockup** (pinwheel + wordmark); mouthwash's
+  logo is text-only ("MW.S"). The wordmark itself is a two-line stack —
+  a thin, wide-tracked "Studio" (weight 400, `.wordmark-line1` in
+  `globals.css`) sitting above a bold "Stone　Soup" (weight 900,
+  `.wordmark-line2`, with a deliberate extra gap between the two words,
+  not normal word-spacing) — replacing an earlier single-line "Studio
+  Stone Soup" at weight 700. The bold bottom line still carries the
+  weight needed to balance against the icon's solid shape; the thin top
+  line is new visual contrast that single-line version didn't have.
+  `nav .mark`/`.wordmark`/`.wordmark-line1`/`.wordmark-line2` in
+  `app/globals.css` are shared, site-wide — every page's `Nav` gets the
+  same lockup, not just the homepage.
+- `components/VideoHero.tsx`'s intro previously replicated mouthwash's
+  loader via a literal FLIP transform (hero video faked fullscreen, then
+  shrunk back into its resting box). That's been replaced with a simpler
+  mechanic, chosen deliberately over matching mouthwash's exact
+  implementation: a solid `var(--bg)`-colored curtain (`.introOverlay` in
+  `VideoHero.module.css`) sits over the page, which is already in its
+  normal resting layout underneath — hero video already playing in its
+  real spot the whole time, nothing scaled or transformed. Sequence: hold
+  with "S.S.S" on the curtain (`HOLD_MS`) → curtain and mark fade out
+  *together* as one layer (`FADE_MS`), revealing the already-playing video
+  and rest of the page at once. `color: var(--text)` on the mark (dark on
+  the light curtain) — don't revert to white text, that was for when the
+  mark sat over dark video/black, which is no longer the case.
 - mouthwash's project pages have **no video progress bar or scrub UI at
   all** (confirmed directly: every `<video>` there has `controls: false`,
   no custom scrub element anywhere in the DOM). Ours does — that's a

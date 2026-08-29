@@ -41,7 +41,74 @@ function media(dir: string, filename: string): Slide {
   return { src, type: isVideo(src) ? "video" : "image" };
 }
 
+// New work goes at the FRONT of this array, not appended at the end —
+// keeps the underlying list current/newest-first for anyone reading this
+// file, even though what visitors actually see is shuffled (see
+// seededShuffle below — that's a separate, deliberate "different order
+// per visitor" mechanic for freshness, unrelated to recency; don't
+// conflate the two).
 const rawProjects: Project[] = [
+  {
+    slug: "26-essos",
+    dir: "ESSOS",
+    year: "2026",
+    slides: [media("ESSOS", "hero.mp4")],
+  },
+  {
+    slug: "27-greyson-charleston",
+    dir: "Greyson-Charleston",
+    year: "2026",
+    slides: [
+      media("Greyson-Charleston", "hero.jpg"),
+      media("Greyson-Charleston", "grid-01.jpg"),
+      media("Greyson-Charleston", "grid-02.jpg"),
+      media("Greyson-Charleston", "grid-03.jpg"),
+      media("Greyson-Charleston", "grid-04.jpg"),
+      media("Greyson-Charleston", "grid-05.jpg"),
+      media("Greyson-Charleston", "grid-06.jpg"),
+    ],
+  },
+  {
+    slug: "28-greyson-harbor-springs",
+    dir: "Greyson-Harbor Springs",
+    year: "2026",
+    slides: [
+      media("Greyson-Harbor Springs", "hero.jpg"),
+      media("Greyson-Harbor Springs", "grid-01.jpg"),
+      media("Greyson-Harbor Springs", "grid-02.jpg"),
+      media("Greyson-Harbor Springs", "grid-03.jpg"),
+      media("Greyson-Harbor Springs", "grid-04.jpg"),
+      media("Greyson-Harbor Springs", "grid-05.jpg"),
+      media("Greyson-Harbor Springs", "grid-06.jpg"),
+      media("Greyson-Harbor Springs", "grid-07.jpg"),
+    ],
+  },
+  {
+    slug: "29-hypebeast-cup-toki-suntory",
+    dir: "Hypebeast Cup x Toki Suntory",
+    year: "2026",
+    slides: [media("Hypebeast Cup x Toki Suntory", "hero.mp4")],
+  },
+  {
+    slug: "30-unnecessary",
+    dir: "Unnecessary",
+    year: "2026",
+    slides: [
+      media("Unnecessary", "hero.jpg"),
+      media("Unnecessary", "grid-01.jpg"),
+      media("Unnecessary", "grid-02.jpg"),
+      media("Unnecessary", "grid-03.jpg"),
+      media("Unnecessary", "grid-04.jpg"),
+      media("Unnecessary", "grid-05.jpg"),
+      media("Unnecessary", "grid-06.jpg"),
+    ],
+  },
+  {
+    slug: "31-schon-playing-with-fire",
+    dir: "schon-playing-with-fire",
+    year: "2026",
+    slides: [media("schon-playing-with-fire", "hero.mp4")],
+  },
   {
     slug: "01-barcode",
     dir: "Barcode",

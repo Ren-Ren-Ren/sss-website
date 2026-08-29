@@ -32,15 +32,22 @@ export default function ThumbnailMedia({
   src,
   type,
   focal,
+  alt = "",
 }: {
   src: string;
   type: "video" | "image";
   focal?: Focal;
+  // Caller-supplied (project title/subtitle) rather than left empty — an
+  // image grid of 25 case studies with alt="" on every thumbnail was
+  // invisible to image search. No native <video alt> exists, so video
+  // thumbnails don't gain anything from this prop, but accept it anyway
+  // for a consistent call signature.
+  alt?: string;
 }) {
   const style = focal ? { objectPosition: `${focal.x}% ${focal.y}%` } : undefined;
 
   if (type === "image") {
-    return <img src={src} alt="" loading="lazy" style={style} />;
+    return <img src={src} alt={alt} loading="lazy" style={style} />;
   }
 
   return <LazyVideo src={src} style={style} />;

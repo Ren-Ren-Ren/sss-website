@@ -57,6 +57,7 @@ export function getHomeContent(): HomeContent {
 
 export type TeamContent = {
   intro: string[];
+  founder: string;
   services: string[];
   clients: string[];
   email: string;
@@ -65,12 +66,18 @@ export type TeamContent = {
 export function getTeamContent(): TeamContent {
   const sections = splitSections(readFile("team/content.txt"), [
     "INTRO",
+    "FOUNDER",
     "SERVICES",
     "CLIENTS",
     "EMAIL",
   ]);
   return {
     intro: toParagraphs(sections.INTRO),
+    // Rendered on the page + fed into Person structured data (see
+    // app/team/page.tsx) — this is the one place on the site that names
+    // Studio Stone Soup's founder, so "Weiren Jheng" has a page to be
+    // indexed against.
+    founder: toParagraphs(sections.FOUNDER)[0] ?? "",
     services: toListItems(sections.SERVICES),
     clients: toListItems(sections.CLIENTS),
     email: toListItems(sections.EMAIL)[0] ?? "",

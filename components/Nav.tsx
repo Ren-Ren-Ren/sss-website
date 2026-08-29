@@ -10,7 +10,29 @@ export default function Nav() {
       <div className="nav-row nav-top">
         <Link className="mark" href="/">
           <LogoMark />
-          <span>Studio Stone Soup</span>
+          <span className="wordmark">
+            {/* Individual letters spread edge-to-edge (via flex
+                justify-content: space-between + the parent stretching this
+                line to match wordmark-line2's width) to match the source
+                lockup — "STUDIO"'s S and O line up with the start of
+                "STONE" and end of "SOUP" below, not just letter-spaced
+                from the left. aria-hidden + the sr-only span below keep
+                the link's accessible name as a normal "Studio", not six
+                separately-announced letters. */}
+            <span className="wordmark-line1" aria-hidden="true">
+              <span>S</span>
+              <span>T</span>
+              <span>U</span>
+              <span>D</span>
+              <span>I</span>
+              <span>O</span>
+            </span>
+            <span className="sr-only">Studio</span>
+            <span className="wordmark-line2">
+              <span>Stone</span>
+              <span>Soup</span>
+            </span>
+          </span>
         </Link>
         <Clock />
         <ul>

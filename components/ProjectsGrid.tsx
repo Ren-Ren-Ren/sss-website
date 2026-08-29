@@ -59,7 +59,12 @@ export default function ProjectsGrid({
           <Reveal as="div" key={project.slug}>
             <Link href={`/projects/${project.slug}`} className={styles.item}>
               <div className={styles.media}>
-                <ThumbnailMedia src={hero.src} type={hero.type} focal={project.focal} />
+                <ThumbnailMedia
+                  src={hero.src}
+                  type={hero.type}
+                  focal={project.focal}
+                  alt={[title, subtitle].filter(Boolean).join(" — ")}
+                />
               </div>
               <div className={styles.caption}>
                 <span className={styles.title}>{title}</span>

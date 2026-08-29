@@ -2,18 +2,46 @@ import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { getTeamContent } from "@/content/pages";
+import { SITE_URL, SITE_NAME } from "@/lib/site";
 import styles from "./team.module.css";
 
 export const metadata: Metadata = {
-  title: "Team — Studio Stone Soup",
+  title: "Team",
+  description:
+    "Studio Stone Soup is founded and led by Weiren Jheng, a New York–based creative director, working across creative direction, photography, motion, and post-production.",
+  alternates: { canonical: "/team" },
 };
 
 export default function TeamPage() {
   const team = getTeamContent();
+  // "Weiren Jheng — Founder & Creative Director" → name + title, so the
+  // same content.txt line drives both the on-page text and the Person
+  // structured data below.
+  const [founderName, founderTitle] = team.founder.split(" — ").map((s) => s.trim());
+
+  const personJsonLd = founderName
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: founderName,
+        jobTitle: founderTitle || undefined,
+        worksFor: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+        affiliation: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+        url: `${SITE_URL}/team`,
+      }
+    : null;
 
   return (
     <>
       <Nav />
+
+      {personJsonLd && (
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+      )}
 
       <div className={styles.page}>
         <div className={styles.columns}>
@@ -30,6 +58,13 @@ export default function TeamPage() {
                 </p>
               );
             })}
+
+            {team.founder && (
+              <div className={styles.block}>
+                <div className={styles.heading}>Founder</div>
+                <div className={styles.founderName}>{team.founder}</div>
+              </div>
+            )}
 
             <div className={styles.block}>
               <div className={styles.heading}>Inquiries</div>

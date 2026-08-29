@@ -17,6 +17,22 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Standard visually-hidden pattern — content stays in the accessibility
+   tree (screen readers, find-in-page) but takes no visual space. Used by
+   the nav wordmark (see .wordmark-line1) to back a letter-spread,
+   aria-hidden "STUDIO" with one normal-reading "Studio" text node. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* The --font-* base variables (--font-bodoni, --font-switzer) are injected
    by next/font via a class on <body> — so these aliases have to live on
    body too, not :root. A var() reference inside a custom property
@@ -99,11 +115,47 @@ nav .mark {
   align-items: center;
   gap: 8px;
   font-family: var(--font-grotesk);
-  font-weight: 700;
-  font-size: 13.5px;
-  letter-spacing: 0.02em;
   text-decoration: none;
   color: var(--on-dark);
+}
+
+/* Two-line wordmark — a thin "Studio" spread letter-by-letter to span the
+   exact width of the bold "Stone　Soup" below it (S aligned under the S of
+   STONE, O aligned under the P of SOUP — a justified spread, not just
+   letter-spacing from the left), matched to the source lockup. Replaced
+   the single-line "Studio Stone Soup" text this lockup used before; the
+   pinwheel icon (LogoMark) and its scroll-linked rotation are unchanged.
+   align-items: stretch (the flex column default, spelled out here) is
+   load-bearing: it's what makes .wordmark-line1 exactly as wide as
+   .wordmark-line2 — the naturally wider line — so space-between has a
+   real width to spread across instead of collapsing to fit its own tiny
+   content. */
+.wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.wordmark-line1 {
+  display: flex;
+  justify-content: space-between;
+  /* Same weight as .wordmark-line2 (900) — the two lines are told apart by
+     size alone, not weight. Was 400 (thin) against line2's 900, which read
+     as mismatched/inconsistent rather than a deliberate hierarchy. */
+  font-weight: 900;
+  font-size: 8.5px;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+
+.wordmark-line2 {
+  display: flex;
+  gap: 8px;
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  line-height: 1;
 }
 
 nav ul {

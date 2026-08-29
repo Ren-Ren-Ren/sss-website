@@ -191,7 +191,11 @@ export default function CaseStudy({
                 onTimeUpdate={onTimeUpdate}
               />
             ) : (
-              <img key={slide.src} src={slide.src} alt="" />
+              <img
+                key={slide.src}
+                src={slide.src}
+                alt={[content.title, content.subtitle].filter(Boolean).join(" — ")}
+              />
             )}
 
             {/* Pinned to the media's actual rendered rect (frameRect), not

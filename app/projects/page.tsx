@@ -7,7 +7,10 @@ import { getCaseStudyContent } from "@/content/case-studies";
 import styles from "./projects.module.css";
 
 export const metadata: Metadata = {
-  title: "Projects — Studio Stone Soup",
+  title: "Projects",
+  description:
+    "Selected work from Studio Stone Soup — creative direction, photography, and motion for fashion, beauty, and lifestyle brands including Vogue, Marie Claire, NARS, Kylie Cosmetics, and Thom Browne.",
+  alternates: { canonical: "/projects" },
 };
 
 export default function ProjectsPage() {

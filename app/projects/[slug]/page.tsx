@@ -6,6 +6,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { getProject, rawProjects } from "@/lib/projects";
 import { getCaseStudyContent } from "@/content/case-studies";
+import { SITE_URL } from "@/lib/site";
 
 // Replaces 25 near-identical app/projects/<slug>/page.tsx files (each was
 // getProject("<slug>")! + getCaseStudyContent + the same metadata/render
@@ -34,9 +35,28 @@ export async function generateMetadata({
   const { slug } = await params;
   const resolved = resolveProject(slug);
   if (!resolved) notFound();
-  const { content } = resolved;
+  const { project, content } = resolved;
+
+  // Just the case-study-specific part — the root layout's title template
+  // (app/layout.tsx) appends " — Studio Stone Soup" so the brand suffix is
+  // consistent across every route instead of hand-built per page.
+  const title = [content.title, content.subtitle].filter(Boolean).join(" — ");
+  const description =
+    content.description ||
+    `${title} — a ${content.services.join(", ").toLowerCase() || "creative production"} project by Studio Stone Soup, ${content.year}.`;
+
+  // Only an actual image makes a good OG/Twitter card — a video source
+  // isn't a static preview image, so those cases fall back to the site
+  // default (the logo) set in the root layout.
+  const heroSlide = project.slides[0];
+  const ogImage = heroSlide?.type === "image" ? [{ url: heroSlide.src }] : undefined;
+
   return {
-    title: [content.title, content.subtitle].filter(Boolean).join(" — ") + " — Stone Soup",
+    title,
+    description,
+    alternates: { canonical: `/projects/${slug}` },
+    openGraph: { title, description, url: `${SITE_URL}/projects/${slug}`, images: ogImage },
+    twitter: { title, description, images: ogImage?.map((i) => i.url) },
   };
 }
 

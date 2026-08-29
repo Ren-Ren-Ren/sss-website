@@ -79,6 +79,14 @@
   color: var(--muted);
 }
 
+/* Same visual weight as .emailLink (dark text, 15px) but not a link — the
+   founder's name sits in its own labeled block, same pattern as Inquiries
+   below it. */
+.founderName {
+  font-size: 15px;
+  color: var(--text);
+}
+
 .emailLink {
   font-size: 15px;
   text-decoration: none;

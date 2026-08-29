@@ -1,7 +1,7 @@
 /* Fills whatever space the .hero flex column in app/page.module.css gives
-   it. transform (set imperatively by the intro animation) creates its own
-   stacking context, so z-index below only matters/applies while that's
-   active. */
+   it. Always in its normal resting position now — the intro no longer
+   transforms this box (see .introOverlay below), so nothing here is
+   imperatively touched by JS. */
 .box {
   flex: 1;
   min-height: 260px;
@@ -26,39 +26,43 @@
   }
 }
 
-/* Applied to <body> for the ~1.4s the intro runs, so the box's transform
-   (briefly far larger than its resting box) can't create a scrollbar. */
+/* Applied to <body> for the intro's duration, so the fixed full-viewport
+   overlay below can't leave the page scrollable underneath it. */
 .introLock {
   overflow: hidden;
 }
 
-/* The "SSS" mark — independent of the video box's own transform so it
-   stays undistorted; grows past the viewport and fades while the box
-   itself shrinks into place underneath it. */
-.introMark {
+/* The intro: a solid curtain the same color as the page background,
+   covering the already-resting page (hero video is already playing in its
+   normal spot underneath the whole time — nothing is scaled/transformed).
+   Holds with "S.S.S" on top, then the curtain and the mark fade out
+   together as one layer, revealing the page. Replaced an earlier version
+   that scaled the video box itself fullscreen and shrank it back down —
+   this is deliberately simpler: a fade-away curtain, not a shared-element
+   transform. */
+.introOverlay {
   position: fixed;
   inset: 0;
   z-index: 200;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--bg);
+  opacity: 1;
+  transition: opacity 900ms ease;
   pointer-events: none;
 }
 
-.introMark span {
-  font-family: var(--font-grotesk);
-  font-weight: 900;
-  font-size: 32px;
-  letter-spacing: 0.06em;
-  color: #fff;
-  opacity: 1;
-  transform: scale(1);
-  transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1), opacity 700ms ease;
+.introOverlay.fading {
+  opacity: 0;
 }
 
-/* Scaled well past any real viewport width so it visibly blows past the
-   screen edges as it fades, rather than just reading as "a bit bigger". */
-.introMark.growing span {
-  transform: scale(16);
-  opacity: 0;
+.introOverlay span {
+  font-family: var(--font-grotesk);
+  font-weight: 900;
+  font-size: 28px;
+  letter-spacing: 0.06em;
+  /* Dark on the light curtain — was white text over video/black before;
+     inverted now that the mark sits on var(--bg) instead. */
+  color: var(--text);
 }
